@@ -1,0 +1,198 @@
+
+/dev/mtd/3
+
+tftp 80700000 zImage; nand erase 200000 150000;nand write 80700000 200000 150000 
+
+/dev/mtd/4
+
+tftp 80700000 zImage; nand erase 600000 150000;nand write 80700000 600000 150000 
+
+
+
+
+setenv gatewayip 192.168.1.254;setenv ipaddr 192.168.1.186;setenv serverip 192.168.1.145;setenv ethaddr 00:0e:99:04:51:56;setenv bootcount 0;setenv bootlimit 5;
+
+
+
+更新系统 bootcmd
+
+
+/dev/mtd6
+
+tftp 82000000 rootfs.squashfs; nand erase 2a00000 1700000; nand write 82000000 2a00000 1700000
+
+
+/dev/mtd5
+
+tftp 82000000 rootfs.squashfs; nand erase a00000 1700000; nand write 82000000 a00000 1300000
+
+
+NFS
+
+
+
+
+setenv ipaddr 192.168.1.222;setenv serverip 192.168.1.145;setenv bootcmd 'nand read 80700000 200000 150000;go 80700000';setenv bootargs video=davincifb:vid0=0,2025K:vid1=off:osd0=800x480x16,2025K:osd1=off davinci_enc_mngr.ch0_output=LCD davinci_enc_mngr.ch0_mode="800x480" console=ttyS0,115200n8 noinitrd rw ip=192.168.1.124:192.168.1.124:192.168.1.254:255.255.255.0:: ff eth=00:0e:89:02:55:56 root=/dev/nfs nfsroot=192.168.1.145:/home/ruiva/jpdm6446rootfs/rootfs  mem=118M init=/init
+
+
+mtd6
+
+
+setenv ipaddr 192.168.1.222;setenv serverip 192.168.1.145;setenv bootcmd 'nand read 80700000 200000 150000;go 80700000';setenv bootargs video=davincifb:vid0=0,2025K:vid1=off:osd0=800x480x16,2025K:osd1=off davinci_enc_mngr.ch0_output=LCD davinci_enc_mngr.ch0_mode="800x480" console=ttyS0,115200n8 noinitrd rw ip=192.168.1.122:192.168.1.122:192.168.1.254:255.255.255.0:: ff eth=00:0e:89:02:55:56 root=/dev/mtdblock6 rootfstype=squashfs  mem=118M init=/init
+
+
+
+硬盘启动
+
+
+setenv ipaddr 192.168.1.222;setenv serverip 192.168.1.145;setenv bootcmd 'nand read 80700000 200000 150000;go 80700000';setenv bootargs video=davincifb:vid0=0,2025K:vid1=off:osd0=800x480x16,2025K:osd1=off davinci_enc_mngr.ch0_output=LCD davinci_enc_mngr.ch0_mode="800x480" console=ttyS0,115200n8 noinitrd rw ip=192.168.1.191:192.168.1.191:192.168.1.254:255.255.255.0:: ff eth=00:0e:89:02:55:56 root=/dev/hda1 rootfstype=ext2  mem=118M init=/init
+
+
+
+SD card 启动
+
+
+setenv ipaddr 192.168.1.222;setenv serverip 192.168.1.145;setenv bootcmd 'nand read 80700000 200000 150000;go 80700000';setenv bootargs video=davincifb:vid0=0,2025K:vid1=off:osd0=800x480x16,2025K:osd1=off davinci_enc_mngr.ch0_output=LCD davinci_enc_mngr.ch0_mode="800x480" console=ttyS0,115200n8 noinitrd rw ip=192.168.1.122:192.168.1.122:192.168.1.254:255.255.255.0:: ff eth=00:0e:89:02:55:56 root=/dev/mmcblk0p1   mem=118M init=/init
+
+备份系统 
+
+
+
+
+setenv altbootcmd 'nand read 80700000 600000 150000;go 80700000';setenv bootargs-backup video=davincifb:vid0=0,2025K:vid1=off:osd0=800x480x16,2025K:osd1=off davinci_enc_mngr.ch0_output=LCD davinci_enc_mngr.ch0_mode="800x480" console=ttyS0,115200n8 noinitrd rw ip=192.168.1.155:192.168.1.155:192.168.1.254:255.255.255.0:: ff eth=00:0e:89:02:55:56 root=/dev/hda2 rootfstype=ext2 mem=160M init=/init
+	
+
+
+tftp 82000000 rootfs.squashfs; nand erase 2a00000 1300000; nand write 82000000 2a00000 1300000;
+
+
+
+
+
+
+
+
+
+cd opt/jpsystem/codec/
+mount -t ext2 /dev/sda /mnt/hd
+rm /mnt/hd/test/*  -f
+./encode -v /mnt/hd/test.264 -s /mnt/hd/test.g711 &
+
+
+
+
+export LD_LIBRARY_PATH=/usr/local/libnl/lib/:/usr/local/openssl/lib
+
+export LD_LIBRARY_PATH=
+
+
+
+
+mount -t vfat /dev/hda /mnt/hd
+scp root@192.168.1.145:/mnt/hgfs/Acanoe/v5t_le* /mnt/hd/
+
+
+ifconfig  eth0 down
+ifconfig  eth1 down
+ifconfig  eth1 up
+udhcpc  -i eth1
+mount -t vfat /dev/hda /mnt/hd
+scp administrator@192.168.1.17:/e/Acanoe/update* ./
+
+
+
+
+
+mknod /dev/hda 
+hda1
+hda2
+
+
+
+
+tftpboot 0x80700000 uImage 
+
+
+setenv bootargs 'console=ttyS0,115200n8 noinitrd root=/dev/mtdblock3 rw rootfstype=yaffs2 ip=$(ipaddr):$(ipaddr):$(gatewayip):$(netmask):::off eth=00:0e:99:02:51:54 eth=00:0e:99:02:51:54, nolock mem=118M';setenv bootcmd 'nboot 0x80700000 0 0x200000; bootm'
+
+
+setenv ipaddr 192.168.1.26
+setenv gatewayip 192.168.1.254
+setenv serverip 192.168.1.25
+setenv ethaddr 00:0e:99:02:51:54
+setenv netmask 255.255.255.0
+setenv bootdelay 3
+setenv videostd pal
+setenv nfshost 192.168.1.145;setenv rootpath /home/ruiva/jpdm6446rootfs/rootfs;setenv bootfile uImage;setenv bootcmd 'tftpboot 0x80700000 uImage;bootm';setenv bootargs video=davincifb:vid0=0,2500K:vid1=0,2500K:osd0=720x576x16,2025K davinci_enc_mngr.ch0_output=COMPOSITE davinci_enc_mngr.ch0_mode=$(videostd) console=ttyS0,115200n8 noinitrd rw ip=$(ipaddr):$(ipaddr):$(gatewayip):$(netmask):::off eth=00:0e:99:02:51:54 root=/dev/nfs nfsroot=$(nfshost):$(rootpath),nolock mem=118M
+
+
+saveenv
+
+
+
+
+setenv nfshost 192.168.1.25;setenv rootpath /home/ruiva/project/ruiva-dm6446-dvsdk2-rel/workdir/filesys;setenv bootargs video=davincifb:vid0=0,2500K:vid1=0,2500K:osd0=720x576x16,2025K davinci_enc_mngr.ch0_output=COMPOSITE davinci_enc_mngr.ch0_mode=$(videostd) console=ttyS0,115200n8 noinitrd rw ip=$(ipaddr):$(ipaddr):$(gatewayip):$(netmask):::off eth=00:0e:99:02:51:54 root=/dev/nfs nfsroot=$(nfshost):$(rootpath),nolock mem=118M
+
+
+
+ssid=test
+hw_mode=g
+channel=10
+interface=wlan0
+bridge=br0
+driver=nl80211
+ignore_broadcast_ssid=0
+macaddr_acl=0
+accept_mac_file=/etc/hostapd.accept
+deny_mac_file=/etc/hostapd.deny
+
+
+
+
+setenv ipaddr 192.168.1.222;setenv serverip 192.168.1.145;setenv bootcmd 'nand read 80700000 200000 150000;go 80700000';setenv bootargs video=davincifb:vid0=0,2025K:vid1=off:osd0=800x480x16,2025K:osd1=off davinci_enc_mngr.ch0_output=LCD davinci_enc_mngr.ch0_mode="800x480" console=ttyS0,115200n8 noinitrd rw ip=192.168.1.122:192.168.1.122:192.168.1.254:255.255.255.0:: ff eth=00:0e:89:02:55:56 root=/dev/nfs nfsroot=192.168.1.30:/home/svn/6446jp-devel/release/jp-system/jp-system-201211301831/rootfs  mem=118M init=/init
+
+
+
+wget -t 0 -w 31 -c -B ftp://dsec.pku.edu.cn/linuxsoft -i filelist.txt -o down.log &
+
+wget http://accountsservice.sourcearchive.com/downloads/0.6.1-1/accountsservice_0.6.1-1.debian.tar.gz
+
+
+# wget http://accountsservice.sourcearchive.com/downloads/0.6.1-1/accountsservice_0.6.1-1.debian.tar.gz
+--00:32:21--  http://accountsservice.sourcearchive.com/downloads/0.6.1-1/accountsservice_0.6.1-1.debian.tar.gz
+           => `accountsservice_0.6.1-1.debian.tar.gz'
+Resolving accountsservice.sourcearchive.com... failed: Name or service not known.
+
+
+
+
+
+
+郭工
+
+setenv ipaddr 192.168.1.222;setenv serverip 192.168.1.145;setenv bootcmd 'nand read 80700000 200000 150000;go 80700000';setenv bootargs video=davincifb:vid0=0,2025K:vid1=off:osd0=800x480x16,2025K:osd1=off davinci_enc_mngr.ch0_output=LCD davinci_enc_mngr.ch0_mode="800x480" console=ttyS0,115200n8 noinitrd rw ip=192.168.1.163:192.168.1.163:192.168.1.254:255.255.255.0:: ff eth=00:0e:89:02:55:56 root=/dev/nfs nfsroot=192.168.1.30:/home/svn/6446jp-devel/release/jp-system/jp-system-201211221242/rootfs mem=118M init=/init
+
+
+																																																					    
+setenv ipaddr 192.168.1.222;setenv serverip 192.168.1.145;setenv bootcmd 'nand read 80700000 200000 150000;go 80700000';setenv bootargs video=davincifb:vid0=0,2025K:vid1=off:osd0=800x480x16,2025K:osd1=off davinci_enc_mngr.ch0_output=LCD davinci_enc_mngr.ch0_mode="800x480" console=ttyS0,115200n8 noinitrd rw ip=192.168.1.122:192.168.1.122:192.168.1.254:255.255.255.0:: ff eth=00:0e:89:02:55:56 root=/dev/nfs nfsroot=192.168.1.145:/home/ruiva/jpdm6446rootfs/rootfs  mem=118M init=/init
+
+
+
+
+insmod  gpio
+
+insmod  gpio.ko
+mknod  /dev/gpio c 247 0 
+./ic_card /dev/gpio /dev/ttyS0
+
+rm  /opt/jpsystem/bin/jpsystem
+sync
+sync
+scp root@192.168.1.145:/home/jpsystem /opt/jpsystem/bin/
+
+sync 
+sync
+
+./hard_bug_test.sh  /mnt/test_1 /mnt/test_2 &
+
+
