@@ -1,4 +1,3 @@
-
 /dev/mtd/3
 
 tftp 80700000 zImage; nand erase 200000 150000;nand write 80700000 200000 150000 
@@ -14,7 +13,6 @@ setenv gatewayip 192.168.1.254;setenv ipaddr 192.168.1.186;setenv serverip 192.1
 
 
 
-更新系统 bootcmd
 
 
 /dev/mtd6
@@ -42,19 +40,15 @@ setenv ipaddr 192.168.1.222;setenv serverip 192.168.1.145;setenv bootcmd 'nand r
 
 
 
-硬盘启动
-
 
 setenv ipaddr 192.168.1.222;setenv serverip 192.168.1.145;setenv bootcmd 'nand read 80700000 200000 150000;go 80700000';setenv bootargs video=davincifb:vid0=0,2025K:vid1=off:osd0=800x480x16,2025K:osd1=off davinci_enc_mngr.ch0_output=LCD davinci_enc_mngr.ch0_mode="800x480" console=ttyS0,115200n8 noinitrd rw ip=192.168.1.191:192.168.1.191:192.168.1.254:255.255.255.0:: ff eth=00:0e:89:02:55:56 root=/dev/hda1 rootfstype=ext2  mem=118M init=/init
 
 
 
-SD card 启动
-
+SD card 
 
 setenv ipaddr 192.168.1.222;setenv serverip 192.168.1.145;setenv bootcmd 'nand read 80700000 200000 150000;go 80700000';setenv bootargs video=davincifb:vid0=0,2025K:vid1=off:osd0=800x480x16,2025K:osd1=off davinci_enc_mngr.ch0_output=LCD davinci_enc_mngr.ch0_mode="800x480" console=ttyS0,115200n8 noinitrd rw ip=192.168.1.122:192.168.1.122:192.168.1.254:255.255.255.0:: ff eth=00:0e:89:02:55:56 root=/dev/mmcblk0p1   mem=118M init=/init
 
-备份系统 
 
 
 
@@ -168,7 +162,6 @@ Resolving accountsservice.sourcearchive.com... failed: Name or service not known
 
 
 
-郭工
 
 setenv ipaddr 192.168.1.222;setenv serverip 192.168.1.145;setenv bootcmd 'nand read 80700000 200000 150000;go 80700000';setenv bootargs video=davincifb:vid0=0,2025K:vid1=off:osd0=800x480x16,2025K:osd1=off davinci_enc_mngr.ch0_output=LCD davinci_enc_mngr.ch0_mode="800x480" console=ttyS0,115200n8 noinitrd rw ip=192.168.1.163:192.168.1.163:192.168.1.254:255.255.255.0:: ff eth=00:0e:89:02:55:56 root=/dev/nfs nfsroot=192.168.1.30:/home/svn/6446jp-devel/release/jp-system/jp-system-201211221242/rootfs mem=118M init=/init
 
